@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BayiController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -7,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [CalendarController::class,"view"]);
+Route::get('/bayi', [BayiController::class,"index"]);
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
