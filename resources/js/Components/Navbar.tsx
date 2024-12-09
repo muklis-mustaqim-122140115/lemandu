@@ -40,6 +40,26 @@ const Navbar: React.FC = () => {
                     </li>
                     <li>
                         <Link
+                            href="/ibu"
+                            className={`block px-4 py-3 text-gray-700 hover:bg-pink-100 ${isActive(
+                                '/ibu',
+                            )}`}
+                        >
+                            Ibu
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            href="/lansia"
+                            className={`block px-4 py-3 text-gray-700 hover:bg-pink-100 ${isActive(
+                                '/lansia',
+                            )}`}
+                        >
+                            Lansia
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
                             href="/login"
                             className={`block px-4 py-3 text-gray-700 hover:bg-pink-100 ${isActive(
                                 '/login',
