@@ -140,7 +140,7 @@ const Lansia:React.FC<ResponseData> = ({dataLansia}) => {
             <MdElderly className="mr-2" />
             Data Lansia
           </h1>
-          <div className="flex justify-end mb-4">
+          <div className="flex gap-4 justify-end mb-4">
           <select onChange={handleChangeFilter} value={filter} name="filter_bulan" id="filter_bulan">
               <option value="Januari">Januari</option>
               <option value="Februari">Februari</option>
