@@ -7,7 +7,11 @@ interface DataLaporan{
   total:number;
 }
 
-const LaporanPosyandu = ({laporan}) => {
+interface ResponseLaporan{
+  laporan:DataLaporan[];
+}
+
+const LaporanPosyandu: React.FC<ResponseLaporan> = ({laporan}) => {
   const [data,setData] = useState<DataLaporan[]>(laporan)
   const [total,setTotal] = useState<number[]>()
 
@@ -24,7 +28,7 @@ const LaporanPosyandu = ({laporan}) => {
     
   },[data])
 
-  const handleFilter = (filter)=>{
+  const handleFilter = (filter:string)=>{
     window.location.href = route("laporan") + "?filter=" + filter;
   }
   

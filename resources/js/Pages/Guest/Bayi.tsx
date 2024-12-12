@@ -5,22 +5,26 @@ import { Link } from "@inertiajs/react";
 
 
 interface BayiInterface{
-    id:number;
-    nik: string;
-    nama: string;
-    jenisKelamin: "Laki-laki" | "Perempuan";
-    umur: number;
-    bb: number;
-    tb: number;
-    tanggalLahir: string;
-    namaOrangTua: string;
-    nikOrangTua: string;
-    lk: number;
-    ll: number;
-    keterangan: string;
+    id?:number;
+    nik?: string;
+    nama?: string;
+    jenisKelamin?: "Laki-laki" | "Perempuan";
+    umur?: number;
+    bb?: number;
+    tb?: number;
+    tanggalLahir?: string;
+    namaOrangTua?: string;
+    nikOrangTua?: string;
+    lk?: number;
+    ll?: number;
+    keterangan?: string;
 }
 
-const Bayi: React.FC = ({dataBayi}) => {
+interface ResponseData{
+  dataBayi:BayiInterface[];
+}
+
+const Bayi: React.FC<ResponseData> = ({dataBayi}) => {
     const [data,setData] = useState<BayiInterface>()
     const [umur,setUmur] = useState<string>();
     const [isOpen,setIsOpen] = useState<boolean>(false)
@@ -39,7 +43,7 @@ const Bayi: React.FC = ({dataBayi}) => {
     const closeModal = () => {
         setIsOpen(false);
     };
-    const handleDelete = (id)=>{
+    const handleDelete = (id : number)=>{
         window.axios.delete(route("bayi.delete",{id:id})).then((res)=>{
           window.location.href = route("bayi");
           
@@ -49,18 +53,26 @@ const Bayi: React.FC = ({dataBayi}) => {
         })
     }
 
-    const calculateAge = (tanggalLahir: string) => {
-      const birthDate = new Date(tanggalLahir);
+    const calculateAge = (tanggalLahir: string | undefined) => {
+      if (!tanggalLahir) {
+        return "Invalid date"; // Handle undefined case
+      }
+    
+      const birthDate = new Date(tanggalLahir); // Safe to use now
+      if (isNaN(birthDate.getTime())) {
+        return "Invalid date"; // Handle invalid date strings
+      }
+    
       const today = new Date();
-  
+    
       const years = today.getFullYear() - birthDate.getFullYear();
       const months = today.getMonth() - birthDate.getMonth();
       const days = today.getDate() - birthDate.getDate();
-  
+    
       let ageYears = years;
       let ageMonths = months;
       let ageDays = days;
-  
+    
       if (ageDays < 0) {
         ageMonths--;
         const previousMonth = new Date(
@@ -70,15 +82,16 @@ const Bayi: React.FC = ({dataBayi}) => {
         ).getDate();
         ageDays += previousMonth;
       }
+    
       if (ageMonths < 0) {
         ageYears--;
         ageMonths += 12;
       }
-  
+    
       return `${ageYears} tahun ${ageMonths} bulan ${ageDays} hari`;
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
       const { name, value } = e.target;
       setData({ ...data, [name]: value });
       if (name === "tanggalLahir") {
@@ -86,19 +99,27 @@ const Bayi: React.FC = ({dataBayi}) => {
       }
     };
 
-    const handleChangeFilter = (e)=>{
+    const handleChangeFilter = (e: React.ChangeEvent<HTMLSelectElement>)=>{
       setFilter(e.target.value)
       window.location.href = route("bayi") + "?filter=" + e.target.value;
     }
   
     const handleSave = () => {
-    window.axios.put(route("bayi.update",{id:data.id}),data).then((res)=>{
-      window.location.href = route("bayi");
-    }).catch((err)=>{
-      console.log(err);
-      
-    })
+      if (!data) {
+        console.error("Data is undefined.");
+        return;
+      }
+    
+      window.axios
+        .put(route("bayi.update", { id: data.id }), data)
+        .then((res) => {
+          window.location.href = route("bayi");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     };
+    
 
       if (!dataBayi || !Array.isArray(dataBayi)) {
     return (
@@ -247,7 +268,13 @@ const Bayi: React.FC = ({dataBayi}) => {
                 </td>
                 <td className="flex gap-1">
                     <button className="px-2 py-1 bg-yellow-500 text-white rounded"  onClick={()=>{openModal(bayi)}}>Edit</button>
-                    <button className="px-2 py-1 bg-red-500 text-white rounded" onClick={()=>{handleDelete(bayi.id)}} >Delete</button>
+                    <button className="px-2 py-1 bg-red-500 text-white rounded" onClick={() => {
+                    if (bayi.id !== undefined) {
+                      handleDelete(bayi.id);
+                    } else {
+                      console.error("ID is undefined");
+                    }
+                  }} >Delete</button>
                 </td>
               </tr>
             ))

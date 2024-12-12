@@ -1,31 +1,35 @@
 import Guest from '@/Layouts/GuestLayout'
 import { Link } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaUserNurse } from "react-icons/fa";
 
 interface IbuInterface{
-  id:number;
-  nik: string;
-  name: string;
-  tanggallahir: string;
-  niksuami: string;
-  namasuami: string;
-  umur: stirng;
-  telepon: string;
-  alamat: string;
-  bbsebelum: number;
-  bbsesudah: number;
-  tb: number;
-  ll: number;
-  goldar: number;
-  hemoglobin: number;
-  tinggifundus: number;
-  jadwallahir: string;
-  keluhan: string;
-  keterangan: string;
+  id?:number;
+  nik?: string;
+  name?: string;
+  tanggallahir?: string;
+  niksuami?: string;
+  namasuami?: string;
+  umur?: string;
+  telepon?: string;
+  alamat?: string;
+  bbsebelum?: number;
+  bbsesudah?: number;
+  tb?: number;
+  ll?: number;
+  goldar?: number;
+  hemoglobin?: number;
+  tinggifundus?: number;
+  jadwallahir?: string;
+  keluhan?: string;
+  keterangan?: string;
 }
 
-const Ibu = ({dataIbu}) => {
+interface ResponseData{
+  dataIbu:IbuInterface[];
+}
+
+const Ibu: React.FC<ResponseData> = ({dataIbu}) => {
   const [data,setData] = useState<IbuInterface>();
   const [isOpen,setIsOpen] = useState<boolean>(false)
   const [filter,setFilter] = useState<string>(window.location.search.substring(8))
@@ -40,54 +44,67 @@ const Ibu = ({dataIbu}) => {
     setIsOpen(false)
   }
 
-  const calculateAge = (tanggalLahir: string) => {
+  const calculateAge = (tanggalLahir: string | undefined) => {
+    if (!tanggalLahir) {
+      return "Tanggal lahir tidak valid"; // Or some default message
+    }
+  
     const birthDate = new Date(tanggalLahir);
     const today = new Date();
-
+  
     const years = today.getFullYear() - birthDate.getFullYear();
     const months = today.getMonth() - birthDate.getMonth();
     const days = today.getDate() - birthDate.getDate();
-
+  
     let ageYears = years;
     let ageMonths = months;
     let ageDays = days;
-
+  
     if (ageDays < 0) {
       ageMonths--;
-      const previousMonth = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        0
-      ).getDate();
+      const previousMonth = new Date(today.getFullYear(), today.getMonth(), 0).getDate();
       ageDays += previousMonth;
     }
+  
     if (ageMonths < 0) {
       ageYears--;
       ageMonths += 12;
     }
-
+  
     return `${ageYears} tahun ${ageMonths} bulan ${ageDays} hari`;
   };
 
-  const handleChange = (e)=>{
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    
-      setData({ ...data, [name]: value });
-      if (name === "tanggallahir") {
-        setUmur(calculateAge(value));
-      }
-  }
+  
+    // Ensure data structure matches the IbuInterface type
+    setData((prev) => ({
+      ...prev,
+      [name]: name === "id" ? Number(value) || undefined : value,
+    }));
+  
+    if (name === "tanggallahir") {
+      setUmur(calculateAge(value));
+    }
+  };
 
   const handleSave = () => {
-    window.axios.put(route("ibu.update",{id:data.id}),data).then((res)=>{
+    if (!data) {
+      console.error("Data is undefined.");
+      return;
+    }
+  
+    // Use data with the non-null assertion
+    window.axios.put(route("ibu.update", { id: data.id }), data).then((res) => {
       window.location.href = route("ibu");
-    }).catch((err)=>{
+    }).catch((err) => {
       console.log(err);
-      
-    })
-    };
+    });
+  };
 
-  const handleDelete = (id)=>{
+  const handleDelete = (id : number)=>{
     window.axios.delete(route("ibu.delete",{id:id})).then((res)=>{
       window.location.href = route("ibu");
       
@@ -97,7 +114,7 @@ const Ibu = ({dataIbu}) => {
     })
 }
 
-  const handleChangeFilter = (e)=>{
+  const handleChangeFilter = (e:React.ChangeEvent<HTMLSelectElement>)=>{
     setFilter(e.target.value)
     window.location.href = route("ibu") + "?filter=" + e.target.value;
   }
@@ -245,7 +262,7 @@ const Ibu = ({dataIbu}) => {
                     >
                       <td className="border-b border-white px-4 py-2">{ibu.nik}</td>
                       <td className="border-b border-white px-4 py-2">
-                        {ibu.nama}
+                        {ibu.name}
                       </td>
                       <td className="border-b border-white px-4 py-2">
                         {ibu.niksuami}
@@ -294,7 +311,7 @@ const Ibu = ({dataIbu}) => {
                       </td>
                       <td className="flex gap-2">
                         <button className="px-2 py-1 bg-yellow-500 text-white rounded"  onClick={()=>{openModal(ibu)}}>Edit</button>
-                        <button className="px-2 py-1 bg-red-500 text-white rounded" onClick={()=>{handleDelete(ibu.id)}} >Delete</button>
+                        <button className="px-2 py-1 bg-red-500 text-white rounded" onClick={()=>{handleDelete(ibu.id ?? 0)}} >Delete</button>
                     </td>
                     </tr>
                   ))
@@ -413,7 +430,7 @@ const Ibu = ({dataIbu}) => {
             <input
               type="date"
               name="tanggallahir"
-              value={data?.tanggalLahir}
+              value={data?.tanggallahir}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />

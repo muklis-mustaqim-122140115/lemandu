@@ -78,10 +78,10 @@ const TambahLansia: React.FC = () => {
       2: ["bb", "tb", "ll", "lk", "tensi", "goldar", "keterangan"],
     };
 
-    const requiredFields = requiredFieldsByStep[step] || [];
+    const requiredFields = requiredFieldsByStep[step as 1 | 2] || [];
     const newErrors = requiredFields
-      .filter((field) => !formData[field]?.trim())
-      .map((field) => `Field "${field}" harus diisi.`);
+  .filter((field) => !formData[field as keyof typeof formData]?.trim())  // Assert field as a key of formData
+  .map((field) => `Field "${field}" harus diisi.`);
 
     setErrors(newErrors);
     return newErrors.length === 0;

@@ -4,42 +4,55 @@ import { Link } from '@inertiajs/react';
 import { MdElderly } from "react-icons/md";
 
 interface LansiaInterface{
-  id:number;
-  nik: string;
-  nama: string;
-  tanggallahir: string;
-  umur: string;
-  jeniskelamin: "Laki-laki" | "Perempuan";
+  id?:number;
+  nik?: string;
+  name?: string;
+  tanggallahir?: string;
+  umur?: string;
+  jeniskelamin?: "Laki-laki" | "Perempuan";
   noHp?: string;
-  namawali: string;
-  telpwali: string;
-  alamat: string;
-  bb: number;
-  tb: number;
-  ll: number;
-  lk: number;
-  tensi: number;
-  goldar: string;
-  keterangan: string;
+  namawali?: string;
+  telpwali?: string;
+  alamat?: string;
+  bb?: number;
+  tb?: number;
+  ll?: number;
+  lk?: number;
+  tensi?: number;
+  goldar?: string;
+  keterangan?: string;
 }
 
+interface ResponseData{
+  dataLansia:LansiaInterface[];
+}
 
-const Lansia = ({dataLansia}) => {
+const Lansia:React.FC<ResponseData> = ({dataLansia}) => {
   const [data, setData] = useState<LansiaInterface>()
   const [umur, setUmur] = useState<string>()
   const [isOpen, setIsOpen] = useState<boolean>()
   const [filter,setFilter] = useState<string>(window.location.search.substring(8))
 
-    const calculateAge = (birthdate: string) => {
-        const today = new Date();
-        const birthDate = new Date(birthdate);
-        const ageYear = today.getFullYear() - birthDate.getFullYear();
-        const ageMonth = today.getMonth() - birthDate.getMonth();
-        const months = ageMonth < 0 ? 12 + ageMonth : ageMonth;
-        return `${ageYear} tahun ${months} bulan`;
-      };
+  const calculateAge = (birthdate: string | undefined) => {
+    if (!birthdate) {
+      return "Tanggal lahir tidak valid"; // Or any default message when birthdate is undefined
+    }
+  
+    const today = new Date();
+    const birthDate = new Date(birthdate);
+    const ageYear = today.getFullYear() - birthDate.getFullYear();
+    const ageMonth = today.getMonth() - birthDate.getMonth();
+    const months = ageMonth < 0 ? 12 + ageMonth : ageMonth;
+    return `${ageYear} tahun ${months} bulan`;
+  };
+  
 
       const handleSave = () => {
+        if (!data) {
+          console.error("Data is undefined.");
+          return;
+        }
+
         window.axios.put(route("lansia.update",{id:data.id}),data).then((res)=>{
           window.location.href = route("lansia");
         }).catch((err)=>{
@@ -48,21 +61,25 @@ const Lansia = ({dataLansia}) => {
         })
         };
 
-        const handleChange = (e)=>{
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
           const { name, value } = e.target;
-          
-            setData({ ...data, [name]: value });
-            if (name === "tanggallahir") {
-              setUmur(calculateAge(value));
-            }
-        }
+        
+          setData((prev) => ({
+            ...prev,
+            [name]: name === "id" ? (value ? Number(value) : 0) : value, // Ensure 'id' is always a valid number (or 0 if undefined)
+          }));
+        
+          if (name === "tanggallahir") {
+            setUmur(calculateAge(value));
+          }
+        };
 
-        const handleChangeFilter = (e)=>{
+        const handleChangeFilter = (e: React.ChangeEvent<HTMLSelectElement>)=>{
           setFilter(e.target.value)
           window.location.href = route("lansia") + "?filter=" + e.target.value;
         }
     
-      const handleDelete = (id)=>{
+      const handleDelete = (id:number)=>{
         window.axios.delete(route("lansia.delete",{id:id})).then((res)=>{
           window.location.href = route("lansia");
           
@@ -223,7 +240,7 @@ const Lansia = ({dataLansia}) => {
                         {lansia.nik}
                       </td>
                       <td className="border-b border-white px-4 py-2">
-                        {lansia.nama}
+                        {lansia.name}
                       </td>
                       <td className="border-b border-white px-4 py-2">
                         {lansia.tanggallahir}
@@ -269,7 +286,7 @@ const Lansia = ({dataLansia}) => {
                       </td>
                       <td className="flex gap-2">
                         <button className="px-2 py-1 bg-yellow-500 text-white rounded"  onClick={()=>{openModal(lansia)}}>Edit</button>
-                        <button className="px-2 py-1 bg-red-500 text-white rounded" onClick={()=>{handleDelete(lansia.id)}} >Delete</button>
+                        <button className="px-2 py-1 bg-red-500 text-white rounded" onClick={()=>{handleDelete(lansia.id ?? 0)}} >Delete</button>
                     </td>
                     </tr>
                   ))
@@ -307,7 +324,7 @@ const Lansia = ({dataLansia}) => {
             <input
               type="date"
               name="tanggallahir"
-              value={data?.tanggalLahir}
+              value={data?.tanggallahir}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
@@ -326,7 +343,7 @@ const Lansia = ({dataLansia}) => {
           <label className="block text-sm font-medium">Jenis Kelamin</label>
           <select
               name="jeniskelamin"
-              value={data.jeniskelamin}
+              value={data?.jeniskelamin || ""}
               onChange={handleChange}
               className="p-2 bg-white/30 backdrop-blur-md border border-white/50 rounded-lg shadow-lg"
             >
