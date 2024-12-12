@@ -17,7 +17,6 @@ interface Event {
     id:number;
     start: Date | string;
     allDay: boolean;
-    id: number;
     description: string;
     location: string;
 }
