@@ -21,7 +21,7 @@ export default function Login({
         e.preventDefault();
 
         post(route('login'), {
-            onFinish: () => reset('password'),
+            onFinish: () => window.location.href = route('dashboard'),
         });
     };
 
