@@ -27,15 +27,15 @@ export default function Login({
 
     return (
         <Guest>
-            <div className="flex h-screen items-center justify-center bg-gray-100">
-                <div className="flex h-[100%] w-[100%] max-w-[75%] flex-col overflow-hidden bg-white shadow-lg md:h-[100%] md:flex-row">
+            <div className="h-screen flex items-center justify-center bg-gradient-to-t from-[#FFE2DC] to-white bg-cover bg-center">
+                <div className="flex flex-col md:flex-row bg-white/50 backdrop-blur-md rounded-3xl shadow-lg overflow-hidden w-[40%] md:h-[60%]">
                     {/* Bagian Masuk */}
-                    <div className="flex flex-1 items-center justify-center p-8">
-                        <div className="w-full max-w-sm">
-                            <h2 className="mb-6 text-center text-2xl font-bold text-black">
+                    <div className="flex-1 p-2 flex items-center justify-center">
+                        <div className="w-full max-w-md px-8 py-6">
+                            <h2 className="text-2xl font-bold mb-6 text-center text-black">
                                 Masuk
                             </h2>
-                            <form className="space-y-4" onSubmit={submit}>
+                            <form className="space-y-6" onSubmit={submit}>
                                 <div>
                                     <label
                                         htmlFor="email"
@@ -43,22 +43,17 @@ export default function Login({
                                     >
                                         E-mail
                                     </label>
-                                    <TextInput
-                                        id="email"
+                                    <input
                                         type="email"
-                                        name="email"
-                                        value={data.email}
+                                        id="email"
                                         placeholder="contoh@gmail.com"
-                                        isFocused={true}
-                                        onChange={(e) =>
-                                            setData('email', e.target.value)
-                                        }
-                                        className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#63C96B]"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#63C96B]"
+                                        value={data.email}
+                                        onChange={(e) => setData('email', e.target.value)}
                                     />
-                                    <InputError
-                                        message={errors.email}
-                                        className="mt-2"
-                                    />
+                                    {errors.email && (
+                                        <InputError message={errors.email} className="mt-2" />
+                                    )}
                                 </div>
                                 <div>
                                     <label
@@ -67,53 +62,35 @@ export default function Login({
                                     >
                                         Kata Sandi
                                     </label>
-                                    <TextInput
-                                        id="password"
+                                    <input
                                         type="password"
-                                        name="password"
-                                        value={data.password}
+                                        id="password"
                                         placeholder="Masukkan Kata Sandi"
-                                        className="w-full rounded-md border border-gray-300 px-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-[#63C96B]"
-                                        autoComplete="current-password"
-                                        onChange={(e) =>
-                                            setData('password', e.target.value)
-                                        }
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-[#63C96B]"
+                                        value={data.password}
+                                        onChange={(e) => setData('password', e.target.value)}
                                     />
-                                    <InputError
-                                        message={errors.password}
-                                        className="mt-2"
-                                    />
+                                    {errors.password && (
+                                        <InputError message={errors.password} className="mt-2" />
+                                    )}
                                 </div>
-                                <a
-                                    href="#"
-                                    className="block text-sm text-blue-500 hover:underline"
-                                >
-                                    Lupa Kata Sandi?
-                                </a>
+                                {canResetPassword && (
+                                    <Link
+                                        href={route('password.request')}
+                                        className="block text-sm text-blue-500 hover:underline"
+                                    >
+                                        Lupa Kata Sandi?
+                                    </Link>
+                                )}
                                 <button
                                     type="submit"
-                                    className="w-full rounded-md bg-[#63C96B] px-4 py-2 font-semibold text-white transition-colors hover:bg-[#52A95A]"
+                                    disabled={processing}
+                                    className="w-full py-3 px-4 bg-[#48D1CC] text-white font-semibold rounded-md hover:bg-[#a3fffc] hover:text-gray-100 transition-colors"
                                 >
                                     Masuk
                                 </button>
                             </form>
                         </div>
-                    </div>
-
-                    {/* Bagian Daftar */}
-                    <div className="font-montserrat flex flex-1 flex-col items-center justify-center rounded-l-[60px] bg-[#63C96B] p-8">
-                        <h2 className="mb-4 text-4xl font-bold text-white">
-                            Halo Teman!
-                        </h2>
-                        <p className="mb-6 text-center text-white">
-                            Daftarkan akun Anda untuk mendapatkan pengalaman
-                            yang lebih baik dan menggunakan semua fitur!
-                        </p>
-                        <Link href="/register">
-                            <button className="rounded-md border-2 border-white bg-[#63C96B] px-6 py-2 font-semibold text-white transition-colors hover:bg-[#52A95A]">
-                                Daftar Akun
-                            </button>
-                        </Link>
                     </div>
                 </div>
             </div>

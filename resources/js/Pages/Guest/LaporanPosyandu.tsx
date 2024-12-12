@@ -21,7 +21,7 @@ const LaporanPosyandu: React.FC<ResponseLaporan> = ({laporan}) => {
     newTotals[0] = null;
 
     data.forEach((d) => {
-      newTotals[d.bulan - 1] = d.total; // Bulan 1 ditempatkan pada index 0, dst.
+      newTotals[d.bulan] = d.total; // Bulan 1 ditempatkan pada index 0, dst.
     });
 
     setTotal(newTotals);

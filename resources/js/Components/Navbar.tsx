@@ -1,37 +1,52 @@
-import React,{useState} from "react";
-import {Link} from "@inertiajs/react"
+import React from "react";
+import { Link, usePage } from "@inertiajs/react";
+import {
+  FaHome,
+  FaBaby,
+  FaHospital,
+  FaUserNurse,
+  FaClipboardList,
+  FaSignInAlt,
+  FaUserPlus,
+} from "react-icons/fa";
+
+import { MdElderly } from "react-icons/md";
 
 const Navbar: React.FC = () => {
-  const [location,setLocation] = useState(window.location.pathname);
+  const { auth } = usePage().props;
 
   const isActive = (path: string) =>
-    location === path ? "bg-[#FFCBC1]" : "bg-white";
+    route().current() === path ? "bg-[#FFC1C1]" : "bg-transparent";  
 
   return (
     <div className="flex">
       {/* Sidebar */}
-      <nav className="w-64 bg-white">
+      <nav className="w-64 bg-gradient-to-t from-[#FFE2DC] to-white sticky top-0 h-screen">
         {/* Header tanpa border */}
-        <div className="bg-[#FFABAB] py-6 px-4 rounded-tr-[20%]">
-          <h1 className="text-2xl font-bold text-white">PortalPosyandu</h1>
+        <div className="bg-[#FFABAB] py-6 px-4 rounded-tr-2xl mt-10">
+          <h1 className="text-4xl font-bold text-white text-center">Lemandu</h1>
+          <h2 className="text-white text-center mt-0.5 text-md">
+            Portal Posyandu Lematang
+          </h2>
         </div>
 
         {/* Navigation Links */}
-        <ul className="space-y-1 mt-4 border-r border-grey-300 h-full">
-          <li>
+        <ul className="space-y-1 mt-4 border-r border-grey-300 bg-transparent">
+          {auth.user && <>
+            <li>
             <Link
               href="/"
-              className={`block py-3 px-4 text-gray-700 hover:bg-pink-100 ${isActive(
-                "/"
+              className={`flex items-center gap-2 block py-3 px-4 text-gray-700 hover:bg-pink-100 ${isActive(
+                "dashboard"
               )}`}
             >
-              Beranda
+              <FaHome /> Beranda
             </Link>
           </li>
           {/* Catatan Kesehatan (non-clickable) */}
           <li>
-            <div className="block py-3 px-4 text-gray-700 bg-white cursor-default">
-              Catatan Kesehatan
+            <div className="flex items-center gap-2 block py-3 px-4 text-gray-700 cursor-default">
+              <FaHospital /> Catatan Kesehatan
             </div>
           </li>
           {/* Submenu for Catatan Kesehatan */}
@@ -39,64 +54,67 @@ const Navbar: React.FC = () => {
             <li>
               <Link
                 href="/bayi"
-                className={`block py-2 px-4 text-gray-600 hover:bg-pink-50 ${isActive(
-                  "/bayi"
+                className={`flex items-center gap-2 block py-2 px-4 text-gray-600 hover:bg-pink-50 ${isActive(
+                  "bayi"
                 )}`}
               >
-                Bayi dan Balita
+                <FaBaby /> Bayi dan Balita
               </Link>
             </li>
             <li>
               <Link
                 href="/ibu"
-                className={`block py-2 px-4 text-gray-600 hover:bg-pink-50 ${isActive(
-                  "/ibu"
+                className={`flex items-center gap-2 block py-2 px-4 text-gray-600 hover:bg-pink-50 ${isActive(
+                  "ibu"
                 )}`}
               >
-                Ibu Hamil
+                <FaUserNurse /> Ibu Hamil
               </Link>
             </li>
             <li>
               <Link
                 href="/lansia"
-                className={`block py-2 px-4 text-gray-600 hover:bg-pink-50 ${isActive(
-                  "/lansia"
+                className={`flex items-center gap-2 block py-2 px-4 text-gray-600 hover:bg-pink-50 ${isActive(
+                  "lansia"
                 )}`}
               >
-                Lansia
+                <MdElderly /> Lansia
               </Link>
             </li>
           </ul>
           <li>
             <Link
               href="/laporan-posyandu"
-              className={`block py-3 px-4 text-gray-700 hover:bg-pink-100 ${isActive(
-                "/laporan-posyandu"
+              className={`flex items-center gap-2 block py-3 px-4 text-gray-700 hover:bg-pink-100 ${isActive(
+                "laporan"
               )}`}
             >
-              Laporan Posyandu
+              <FaClipboardList /> Laporan Posyandu
             </Link>
-          </li>
-          <li>
+          </li></>}
+          {!auth.user ? <>
+            <li>
             <Link
               href="/login"
-              className={`block py-3 px-4 text-gray-700 hover:bg-pink-100 ${isActive(
-                "/login"
+              className={`flex items-center gap-2 block py-3 px-4 text-gray-700 hover:bg-pink-100 ${isActive(
+                "login"
               )}`}
             >
-              Login
+              <FaSignInAlt /> Login
             </Link>
           </li>
+          </> : <>
           <li>
             <Link
-              href="/register"
-              className={`block py-3 px-4 text-gray-700 hover:bg-pink-100 ${isActive(
-                "/register"
+              href="/logout"
+              className={`flex items-center gap-2 block py-3 px-4 text-gray-700 hover:bg-red-400 hover:text-white ${isActive(
+                "register"
               )}`}
             >
-              Register
+              <FaUserPlus /> Logout
             </Link>
           </li>
+          </>}
         </ul>
       </nav>
     </div>

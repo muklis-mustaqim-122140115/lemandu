@@ -55,7 +55,7 @@ export default function Guest({ children }: PropsWithChildren) {
   return isLoading ? (
     <Loading progress={progress} />
   ) : (
-    <div className="mt-10 flex">
+    <div className="flex">
       <Navbar />
       <div className="flex-1">{children}</div>
     </div>
