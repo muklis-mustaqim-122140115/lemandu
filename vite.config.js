@@ -11,6 +11,7 @@ export default defineConfig({
         react(),
     ],
     server:{
+        host:"https://lemandu-production.up.railway.app",
         https: true,
     },
 });
