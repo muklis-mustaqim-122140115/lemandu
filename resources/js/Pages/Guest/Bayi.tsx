@@ -160,7 +160,7 @@ const Bayi: React.FC<ResponseData> = ({dataBayi}) => {
       <FaBaby className="mr-2" />
       Data Bayi
     </h1>
-    <div className="flex gap-4 justify-end mb-4">
+    <div className="flex gap-2 justify-end mb-4">
     <select onChange={handleChangeFilter} value={filter} name="filter_bulan" id="filter_bulan">
               <option value="Januari">Januari</option>
               <option value="Februari">Februari</option>
