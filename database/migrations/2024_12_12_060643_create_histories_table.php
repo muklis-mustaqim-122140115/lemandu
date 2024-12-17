@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("akun_id");
             $table->string('jenis');
+            $table->string('label')->unique()->nullable();
             $table->timestamps();
         });
     }

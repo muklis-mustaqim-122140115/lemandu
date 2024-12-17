@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bayi;
 use App\Models\History;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -12,7 +13,6 @@ class BayiController extends Controller
 {
     public function index(Request $request){
         $filter_bulan = $request->query("filter");
-
         if (!$filter_bulan){
             $filter_bulan = "Januari";
         }
@@ -58,7 +58,7 @@ class BayiController extends Controller
                 $filter = 1; // Default to Januari if there's an invalid input
                 break;
         }
-        $bayi = Bayi::whereMonth('created_at', $filter)->get();
+        $bayi = Bayi::whereMonth('created_at', $filter)->where("akun_id",Auth::user()->id)->get();
         return Inertia::render("Guest/Bayi", ["dataBayi"=> $bayi]);
     }
 
@@ -67,10 +67,27 @@ class BayiController extends Controller
     }
 
     public function store(Request $request){
-        $bayi = Bayi::create($request->all());
-        $history = History::create([
-            "jenis"=>"bayi"
+        $bayi = Bayi::create([
+            "akun_id" => Auth::user()->id,
+            "nik" => $request->nik ,
+            "nama" => $request->nama ,
+            "jenisKelamin" => $request->jenisKelamin ,
+            "umur" => $request->umur ,
+            "bb" => $request->bb ,
+            "tb" => $request->tb ,
+            "tanggalLahir" => $request->tanggalLahir ,
+            "namaOrangTua" => $request->namaOrangTua ,
+            "nikOrangTua" => $request->nikOrangTua ,
+            "lk" => $request->lk ,
+            "ll" => $request->ll ,
+            "keterangan" => $request->keterangan
         ]);
+        $history = History::create([
+            "jenis"=>"bayi",
+            "akun_id" => Auth::user()->id
+        ]);
+        $history->label = $bayi->id . $bayi->created_at;
+        $history->save();
     }
 
 
@@ -81,6 +98,10 @@ class BayiController extends Controller
 
     public function destroy($id){
         $bayi = Bayi::findOrFail($id);
+        $history = History::where("label", $bayi->id . $bayi->created_at)->first();
+        if($history){
+            $history->delete();
+        }
         $bayi->delete();
     }
 }

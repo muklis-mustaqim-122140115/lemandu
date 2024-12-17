@@ -8,6 +8,7 @@ class Bayi extends Model
 {
     protected $table = "bayi";
     protected $fillable = [
+        "akun_id",
         "nik",
         "nama",
         "jenisKelamin",

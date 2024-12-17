@@ -8,6 +8,7 @@ class Lansia extends Model
 {
     protected $table = "lansia";
     protected $fillable = [
+        "akun_id",
         "nik",
         "name",
         "tanggallahir",

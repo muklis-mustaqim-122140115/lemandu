@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\History;
 use App\Models\Lansia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class LansiaController extends Controller
@@ -58,7 +59,7 @@ class LansiaController extends Controller
                 break;
         }
 
-        $lansia = Lansia::whereMonth('created_at', $filter)->get();
+        $lansia = Lansia::whereMonth('created_at', $filter)->where("akun_id",Auth::user()->id)->get();
         return Inertia::render("Guest/Lansia", ["dataLansia"=> $lansia]);
     }
 
@@ -67,10 +68,13 @@ class LansiaController extends Controller
     }
 
     public function store(Request $request){
-        $lansia = Lansia::create($request->all());
+        $lansia = Lansia::create(array_merge($request->all(), ['akun_id' => Auth::user()->id]));
         $history = History::create([
-            "jenis"=>"lansia"
+            "jenis"=>"lansia",
+            "akun_id"=>Auth::user()->id
         ]);
+        $history->label = $lansia->id . $lansia->created_at;
+        $history->save();
     }
 
     public function update(Request $request, $id){
@@ -80,6 +84,10 @@ class LansiaController extends Controller
 
     public function destroy($id){
         $lansia = Lansia::findOrFail($id);
+        $history = History::where("label", $lansia->id . $lansia->created_at)->where("akun_id",Auth::user()->id)->first();
+        if($history){
+            $history->delete();
+        }
         $lansia->delete();
     }
 }

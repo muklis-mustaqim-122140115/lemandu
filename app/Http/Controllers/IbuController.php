@@ -6,6 +6,7 @@ use App\Models\History;
 use App\Models\Ibu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class IbuController extends Controller
@@ -60,7 +61,7 @@ class IbuController extends Controller
         }
         
         // Query the Ibu model, filtering by the month of `created_at`
-        $ibu = Ibu::whereMonth('created_at', $filter)->get();
+        $ibu = Ibu::whereMonth('created_at', $filter)->where("akun_id",Auth::user()->id)->get();
         return Inertia::render("Guest/Ibu", ["dataIbu"=> $ibu]);
     }
 
@@ -69,10 +70,13 @@ class IbuController extends Controller
     }
 
     public function store(Request $request){
-        $ibu = Ibu::create($request->all());
+        $ibu = Ibu::create(array_merge($request->all(), ['akun_id' => Auth::user()->id]));
         $history = History::create([
-            "jenis"=>"ibu"
+            "jenis"=>"ibu",
+            "akun_id"=> Auth::user()->id,   
         ]);
+        $history->label = $ibu->id . $ibu->created_at;
+        $history->save();
     }
 
     public function update(Request $request, $id){
@@ -82,6 +86,10 @@ class IbuController extends Controller
 
     public function destroy($id){
         $ibu = Ibu::findOrFail($id);
+        $history = History::where("label", $ibu->id . $ibu->created_at)->where("akun_id",Auth::user()->id)->first();
+        if($history){
+            $history->delete();
+        }
         $ibu->delete();
     }
 }

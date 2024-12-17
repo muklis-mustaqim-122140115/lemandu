@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create("lansia", function (Blueprint $table) {
             $table->id();
+            $table->foreignId("akun_id");
             // nik: string;
             $table->string("nik");
                 // nama: string;
