@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 "name"=> "Lubuk Bais",
-                "email"=> "lububais@gmail.com",
+                "email"=> "lubukbais@gmail.com",
                 "password"=> Hash::make("lubukbaisjaya"),
             ],
             [
