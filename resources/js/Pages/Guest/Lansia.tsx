@@ -284,7 +284,7 @@ const Lansia:React.FC<ResponseData> = ({dataLansia}) => {
                       <td className="border-b border-white px-4 py-2">
                         {lansia.keterangan || "N/A"}
                       </td>
-                      <td className="flex gap-2">
+                      <td className="flex gap-2 align-center">
                         <button className="px-2 py-1 bg-yellow-500 text-white rounded"  onClick={()=>{openModal(lansia)}}>Edit</button>
                         <button className="px-2 py-1 bg-red-500 text-white rounded" onClick={()=>{handleDelete(lansia.id ?? 0)}} >Delete</button>
                     </td>

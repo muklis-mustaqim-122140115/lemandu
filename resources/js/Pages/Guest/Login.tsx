@@ -28,7 +28,7 @@ export default function Login({
     return (
         <Guest>
             <div className="h-screen flex items-center justify-center bg-gradient-to-t from-[#FFE2DC] to-white bg-cover bg-center">
-                <div className="flex flex-col md:flex-row bg-white/50 backdrop-blur-md rounded-3xl shadow-lg overflow-hidden w-[40%] md:h-[60%]">
+                <div className="flex flex-col md:flex-row bg-white/50 backdrop-blur-md rounded-3xl shadow-lg overflow-hidden w-[80%] md:w-[40%] md:h-[60%]">
                     {/* Bagian Masuk */}
                     <div className="flex-1 p-2 flex items-center justify-center">
                         <div className="w-full max-w-md px-8 py-6">

@@ -17,12 +17,12 @@ export default function Guest({ children }: PropsWithChildren) {
 
       const timer = setInterval(() => {
         setProgress((prev) => {
-          const newProgress = prev + 70;
-          if (newProgress >= 700) {
+          const newProgress = prev + 10;
+          if (newProgress >= 70) {
             clearInterval(timer);
             setIsLoading(false);
             sessionStorage.setItem("hasVisited", "true");
-            return 100;
+            return 10;
           }
           return newProgress;
         });
@@ -55,9 +55,11 @@ export default function Guest({ children }: PropsWithChildren) {
   return isLoading ? (
     <Loading progress={progress} />
   ) : (
-    <div className="flex">
-      <Navbar />
-      <div className="flex-1">{children}</div>
+    <div className=" bg-gradient-to-t from-[#FFE2DC] ">
+      <div className="flex xs:container w-full sm:w-full">
+        <Navbar />
+      <div className="flex-1 xs:container w-full sm:w-full">{children}</div>
+      </div>  
     </div>
   );
 }

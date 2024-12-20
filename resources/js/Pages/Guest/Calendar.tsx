@@ -125,14 +125,14 @@ const CalendarApp: React.FC<ResponseData>  = ({dataEvent,historyIbu,historyBayi,
 
     return (
         <Guest>
-            <div className="min-h-screen bg-gradient-to-t from-[#FFE2DC] to-white font-sans">
+            <div className="bg-gradient-to-t from-[#FFE2DC] to-white font-sans">
       <div className="py-8 pl-11 px-6 flex flex-col items-center justify-center text-3xl font-bold text-black mb-8">
         <h1 className="flex flex-col items-center text-black">
           <FaHome className="text-5xl mb-4" /> {/* Mengubah ukuran ikon */}
           <span className="text-4xl">BERANDA</span> {/* Mengubah ukuran teks */}
         </h1>
 
-        <div className="flex flex-wrap justify-between items-center gap-8 mt-8 w-[65%] mx-auto">
+        <div className="flex flex-wrap justify-between items-center gap-8 mt-8 w-[70%] mx-auto">
           <InfoBox
             title="Jumlah Bayi"
             value={historyBayi}
@@ -155,8 +155,9 @@ const CalendarApp: React.FC<ResponseData>  = ({dataEvent,historyIbu,historyBayi,
         <h1 className="text-3xl font-bold text-center text-black mb-8">
           Kalender Kegiatan Posyandu Lematang
         </h1>
-        <div className="w-[80%] mx-auto text-black relative">
+        <div className="w-[100%] md:w-[65%] mx-auto text-black relative">
           <FullCalendar
+          contentHeight={600}
             plugins={[dayGridPlugin, interactionPlugin]}
             headerToolbar={{
               left: "prev,next today",
@@ -176,7 +177,7 @@ const CalendarApp: React.FC<ResponseData>  = ({dataEvent,historyIbu,historyBayi,
             dateClick={handleDateClick}
             eventClick={handleEventClick}
             eventContent={(eventInfo) => (
-              <div>
+              <div className='overflow-hidden'>
                 <strong>{eventInfo.event.title}</strong>{" "}
                 {/* Tampilkan location sebagai title */}
                 <div>{eventInfo.event.extendedProps.description}</div>{" "}
