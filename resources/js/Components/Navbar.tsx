@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import {
   FaHome,
@@ -8,22 +8,30 @@ import {
   FaClipboardList,
   FaSignInAlt,
   FaUserPlus,
+  FaBars
 } from "react-icons/fa";
 
 import { MdElderly } from "react-icons/md";
 
 const Navbar: React.FC = () => {
   const { auth } = usePage().props;
+  const [isShown,setIsShown] = useState<boolean>();
 
   const isActive = (path: string) =>
     route().current() === path ? "bg-[#FFC1C1]" : "bg-transparent";  
 
+  const toggleNavbar = ()=>{
+    setIsShown(!isShown);
+  } 
+
   return (
     <div className="flex">
+      <div className={`absolute flex justify-end block md:hidden left-0 top-0 ml-4 mt-16`} onClick={toggleNavbar}><FaBars /></div>
       {/* Sidebar */}
-      <nav className="w-64 bg-gradient-to-t from-[#FFE2DC] to-white sticky top-0 h-screen">
+      <nav className={`w-64 bg-gradient-to-t from-[#FFE2DC] to-white sticky top-0 h-screen md:block  ${isShown ? "block" : "hidden"} absolute md:relative`}>
         {/* Header tanpa border */}
         <div className="bg-[#FFABAB] py-6 px-4 rounded-tr-2xl mt-10">
+          <div className={`flex justify-end block md:hidden`} onClick={toggleNavbar}><FaBars /></div>
           <h1 className="text-4xl font-bold text-white text-center">Lemandu</h1>
           <h2 className="text-white text-center mt-0.5 text-md">
             Portal Posyandu Lematang
