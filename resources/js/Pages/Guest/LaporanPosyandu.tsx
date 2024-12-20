@@ -7,6 +7,11 @@ interface DataLaporan{
   total:number;
 }
 
+interface Dimension{
+  width:number;
+  height:number;
+}
+
 interface ResponseLaporan{
   laporan:DataLaporan[];
 }
@@ -14,7 +19,7 @@ interface ResponseLaporan{
 const LaporanPosyandu: React.FC<ResponseLaporan> = ({laporan}) => {
   const [data,setData] = useState<DataLaporan[]>(laporan)
   const [total,setTotal] = useState<number[]>()
-  const [chartDimensions, setChartDimensions] = useState({ width: "1280", height: "960" })
+  const [chartDimensions, setChartDimensions] = useState<Dimension>({ width: 1280, height: 960 })
 
   useEffect(()=>{
     const newTotals = Array(13).fill(0);
